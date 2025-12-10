@@ -15,12 +15,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(RequestUserDTO data) {
+    public void createUser(RequestUserDTO data) {
         findUserByUsername(data.username());
         User user = new User();
         user.setUsername(data.username());
         user.setPassword(generateRandomPassword());
-        return user;
+        userRepository.save(user);
     }
 
     private String generateRandomPassword() {
