@@ -16,18 +16,24 @@ public class UserService {
     private UserRepository userRepository;
 
     public User createUser(RequestUserDTO data) {
+        findUserByUsername(data.username());
         User user = new User();
         user.setUsername(data.username());
         user.setPassword(generateRandomPassword());
         return user;
     }
 
-    public String generateRandomPassword() {
+    private String generateRandomPassword() {
         RandomStringGenerator generator = new RandomStringGenerator.Builder()
                 .withinRange(33, 126)
                 .usingRandom(new SecureRandom()::nextInt)
                 .build();
 
         return generator.generate(16);
+    }
+
+    private void findUserByUsername(String username) {
+        User user = userRepository.findUserByUsername();
+        if (user != null) throw new RuntimeException("User already exist");
     }
 }
