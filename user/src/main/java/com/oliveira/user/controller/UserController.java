@@ -1,9 +1,10 @@
 package com.oliveira.user.controller;
 
 import com.oliveira.user.dto.RequestUserDTO;
+import com.oliveira.user.dto.ResponseUserDTO;
+import com.oliveira.user.model.User;
 import com.oliveira.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<Void>createUser(@RequestBody RequestUserDTO data) {
-        userService.createUser(data);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<ResponseUserDTO>createUser(@RequestBody RequestUserDTO data) {
+        User user = userService.createUser(data);
+        ResponseUserDTO userDTO = new ResponseUserDTO(user.getUsername(), user.getEmail());
+        return ResponseEntity.ok(userDTO);
     }
 }
