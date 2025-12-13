@@ -4,6 +4,7 @@ import com.oliveira.user.dto.RequestUserDTO;
 import com.oliveira.user.dto.ResponseUserDTO;
 import com.oliveira.user.model.User;
 import com.oliveira.user.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseUserDTO>createUser(@RequestBody RequestUserDTO data) {
+    public ResponseEntity<ResponseUserDTO>createUser(@Valid @RequestBody RequestUserDTO data) {
         User user = userService.createUser(data);
         ResponseUserDTO userDTO = new ResponseUserDTO(user.getUsername(), user.getEmail());
         return ResponseEntity.ok(userDTO);

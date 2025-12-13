@@ -16,7 +16,9 @@ public class UserService {
     private UserRepository userRepository;
 
     public User createUser(RequestUserDTO data) {
+
         findUserByUsername(data.username());
+
         User user = new User();
         user.setUsername(data.username());
         user.setEmail(data.email());
