@@ -14,10 +14,11 @@ public class EmailService {
 
     public Email sendEmail(RequestEmailDTO data) {
         Email email = new Email();
-        email.setFrom("example@gmail.com");
-        email.setTo("example@gmail.com");
-        email.setSubject("Subject");
-        email.setBody("Email body");
+        email.setFrom(data.from());
+        email.setTo(data.to());
+        email.setSubject(data.subject());
+        email.setBody(data.body());
+        email.setUserId(data.userId());
         emailRepository.save(email);
         return email;
     }

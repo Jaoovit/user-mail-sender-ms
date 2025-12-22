@@ -17,6 +17,8 @@ public class Email {
     @GeneratedValue
     private UUID id;
 
+    private UUID userId;
+
     @NotBlank(message = "Email is required")
     @jakarta.validation.constraints.Email(message = "Email should be valid")
     private String to;
@@ -37,6 +39,14 @@ public class Email {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getTo() {
