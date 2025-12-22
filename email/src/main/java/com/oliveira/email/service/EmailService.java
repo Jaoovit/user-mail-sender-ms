@@ -14,11 +14,9 @@ public class EmailService {
 
     public Email sendEmail(RequestEmailDTO data) {
         Email email = new Email();
-        email.setFrom(data.from());
-        email.setTo(data.to());
+        email.setId(data.id());
         email.setSubject(data.subject());
         email.setBody(data.body());
-        email.setUserId(data.userId());
         emailRepository.save(email);
         return email;
     }
