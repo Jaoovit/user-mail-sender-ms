@@ -8,7 +8,8 @@ public class RabbitMq {
 
     private final String queueName = "email-queue";
 
-    public Queue queue () {
+    public Queue queue() {
         return new Queue(queueName, true);
     }
+
 }

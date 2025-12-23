@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailConsumer {
 
-    @RabbitListener(queues = "${RABBIT_QUEUE:user.created.queue}")
-    public void listenEmailQueue(@Payload String emailMessage) {
-        System.out.println("Consuming email message: " + emailMessage);
+    @RabbitListener(queues = "email-queue")
+    public void listenEmailQueue(@Payload String string) {
+        System.out.println(string);
     }
 
 }
