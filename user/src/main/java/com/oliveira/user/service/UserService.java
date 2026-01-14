@@ -1,10 +1,13 @@
 package com.oliveira.user.service;
 
 import com.oliveira.user.dto.RequestUserDTO;
+import com.oliveira.user.dto.UserInfoDTO;
 import com.oliveira.user.model.User;
+import com.oliveira.user.producer.UserProducer;
 import com.oliveira.user.repository.UserRepository;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -14,6 +17,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserProducer userProducer;
 
     public User createUser(RequestUserDTO data) {
 
@@ -25,7 +31,20 @@ public class UserService {
         user.setPassword(generateRandomPassword());
         userRepository.save(user);
 
+        UserInfoDTO userInfoDTO = new UserInfoDTO(
+                user.getUsername(),
+                user.getEmail(),
+                encryptPassword(user.getPassword())
+        );
+
+        userProducer.sendUserInformation(userInfoDTO);
+
         return user;
+    }
+
+    private String encryptPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(password);
     }
 
     private String generateRandomPassword() {
