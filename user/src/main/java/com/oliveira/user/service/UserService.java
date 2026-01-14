@@ -38,7 +38,7 @@ public class UserService {
     }
 
     private void findUserByUsername(String username) {
-        User user = userRepository.findUserByUsername();
+        User user = userRepository.findUserByUsername(username);
         if (user != null) throw new RuntimeException("User already exist");
     }
 }
