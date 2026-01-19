@@ -12,7 +12,7 @@ public class UserProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public void sendUserInformation(UserInfoDTO userInformation) {
+    public void sendUserInformation(String userInformation) {
         rabbitTemplate.convertAndSend(
                 RabbitMq.EXCHANGE_NAME,
                 "user-info",
