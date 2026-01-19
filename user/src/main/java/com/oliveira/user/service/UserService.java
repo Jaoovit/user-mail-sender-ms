@@ -37,7 +37,7 @@ public class UserService {
                 encryptPassword(user.getPassword())
         );
 
-        userProducer.sendUserInformation(userInfoDTO.email());
+        userProducer.sendUserInformation(userInfoDTO);
 
         return user;
     }
