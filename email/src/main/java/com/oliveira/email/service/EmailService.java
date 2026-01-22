@@ -1,6 +1,5 @@
 package com.oliveira.email.service;
 
-import com.oliveira.email.dto.RequestEmailDTO;
 import com.oliveira.email.dto.UserInfoDTO;
 import com.oliveira.email.model.Email;
 import com.oliveira.email.repository.EmailRepository;
