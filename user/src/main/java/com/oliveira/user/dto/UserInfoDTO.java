@@ -1,4 +1,6 @@
 package com.oliveira.user.dto;
 
-public record UserInfoDTO(String username, String email, String password) {
+import java.util.UUID;
+
+public record UserInfoDTO(UUID userId, String username, String email, String password) {
 }

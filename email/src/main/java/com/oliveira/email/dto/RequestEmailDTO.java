@@ -1,6 +1,4 @@
 package com.oliveira.email.dto;
 
-import java.util.UUID;
-
-public record RequestEmailDTO(UUID id, String subject, String body) {
+public record RequestEmailDTO(String subject, String body) {
 }

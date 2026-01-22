@@ -16,18 +16,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/emails")
 public class EmailController {
 
-    @Autowired
-    private EmailService emailService;
-
-    @PostMapping
-    public ResponseEntity<ResponseEmailDTO> sendEmail(@Valid @RequestBody RequestEmailDTO data) {
-        Email email = emailService.sendEmail(data);
-        ResponseEmailDTO emailDTO = new ResponseEmailDTO(
-                email.getTo(),
-                email.getFrom(),
-                email.getSubject(),
-                email.getBody()
-        );
-        return ResponseEntity.ok(emailDTO);
-    }
 }

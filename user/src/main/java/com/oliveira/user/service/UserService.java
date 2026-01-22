@@ -32,19 +32,15 @@ public class UserService {
         // userRepository.save(user);
 
         UserInfoDTO userInfoDTO = new UserInfoDTO(
+                user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                encryptPassword(user.getPassword())
+                user.getPassword()
         );
 
         userProducer.sendUserInformation(userInfoDTO);
 
         return user;
-    }
-
-    private String encryptPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(password);
     }
 
     private String generateRandomPassword() {
