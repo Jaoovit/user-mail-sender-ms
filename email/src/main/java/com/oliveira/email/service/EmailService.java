@@ -16,6 +16,14 @@ public class EmailService {
     @Autowired
     private EmailRepository emailRepository;
 
+    public void sendEmail(UserInfoDTO userInfoDTO) {
+        Email email = constructEmail(userInfoDTO);
+        System.out.println("Email sent to: " + email.getTo());
+        System.out.println("Email send to" + email.getFrom());
+        System.out.println("Subject: " + email.getSubject());
+        System.out.println("Body: " + email.getBody());
+    }
+
     private Email constructEmail(UserInfoDTO userInfoDTO) {
         Email email = new Email();
 
@@ -34,7 +42,6 @@ public class EmailService {
         email.setBody(emailBody);
 
         emailRepository.save(email);
-
         return email;
     }
 
