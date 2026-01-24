@@ -16,7 +16,11 @@ public class EmailConsumer {
 
     @RabbitListener(queues = RabbitMq.QUEUE_NAME)
     public void listenEmailQueue(@Payload UserInfoDTO userInfoDTO) {
-        emailService.sendEmail(userInfoDTO);
+        try {
+            emailService.sendEmail(userInfoDTO);
+        } catch (Exception e) {
+            System.err.println("Failed to process message: " + e.getMessage());
+        }
     }
 
 }

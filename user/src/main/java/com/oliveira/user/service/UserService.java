@@ -23,13 +23,13 @@ public class UserService {
 
     public User createUser(RequestUserDTO data) {
 
-        // findUserByUsername(data.username());
+        findUserByUsername(data.username());
 
         User user = new User();
         user.setUsername(data.username());
         user.setEmail(data.email());
         user.setPassword(generateRandomPassword());
-        // userRepository.save(user);
+        userRepository.save(user);
 
         UserInfoDTO userInfoDTO = new UserInfoDTO(
                 user.getId(),
