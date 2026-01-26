@@ -23,13 +23,12 @@ public class UserService {
 
     public User createUser(RequestUserDTO data) {
 
-        findUserByUsername(data.username());
+        checkIfUserExist(data.username());
 
         User user = new User();
         user.setUsername(data.username());
         user.setEmail(data.email());
         user.setPassword(generateRandomPassword());
-        userRepository.save(user);
 
         UserInfoDTO userInfoDTO = new UserInfoDTO(
                 user.getId(),
@@ -39,6 +38,12 @@ public class UserService {
         );
 
         userProducer.sendUserInformation(userInfoDTO);
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
+        userRepository.save(user);
 
         return user;
     }
@@ -52,7 +57,7 @@ public class UserService {
         return generator.generate(16);
     }
 
-    private void findUserByUsername(String username) {
+    private void checkIfUserExist(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) throw new RuntimeException("User already exist");
     }
