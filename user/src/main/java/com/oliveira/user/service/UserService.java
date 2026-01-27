@@ -28,16 +28,9 @@ public class UserService {
         User user = new User();
         user.setUsername(data.username());
         user.setEmail(data.email());
-        user.setPassword(generateRandomPassword());
 
-        UserInfoDTO userInfoDTO = new UserInfoDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword()
-        );
-
-        userProducer.sendUserInformation(userInfoDTO);
+        String randomPassword = generateRandomPassword();
+        user.setPassword(randomPassword);
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
@@ -45,6 +38,14 @@ public class UserService {
 
         userRepository.save(user);
 
+        UserInfoDTO userInfoDTO = new UserInfoDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                randomPassword
+        );
+
+        userProducer.sendUserInformation(userInfoDTO);
         return user;
     }
 

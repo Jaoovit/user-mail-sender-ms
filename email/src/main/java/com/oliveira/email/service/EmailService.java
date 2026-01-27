@@ -3,6 +3,7 @@ package com.oliveira.email.service;
 import com.oliveira.email.dto.UserInfoDTO;
 import com.oliveira.email.model.Email;
 import com.oliveira.email.repository.EmailRepository;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,13 @@ public class EmailService {
     }
 
     private Email constructEmail(UserInfoDTO userInfoDTO) {
+        Email email = getEmail(userInfoDTO);
+
+        emailRepository.save(email);
+        return email;
+    }
+
+    private @NonNull Email getEmail(UserInfoDTO userInfoDTO) {
         Email email = new Email();
 
         email.setUserId(userInfoDTO.userId());
@@ -40,8 +48,6 @@ public class EmailService {
 
         email.setSubject(emailSubject);
         email.setBody(emailBody);
-
-        emailRepository.save(email);
         return email;
     }
 

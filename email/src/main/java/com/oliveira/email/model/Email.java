@@ -1,11 +1,6 @@
 package com.oliveira.email.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -17,20 +12,19 @@ public class Email {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @NotBlank(message = "Email is required")
-    @jakarta.validation.constraints.Email(message = "Email should be valid")
+    @Column(name = "send_to", nullable = false)
     private String to;
 
-    @NotBlank(message = "Email is required")
-    @jakarta.validation.constraints.Email(message = "Email should be valid")
+    @Column(name = "send_by", nullable = false)
     private String from;
 
-    @Size(max = 30, message = "Subject can't exceed 30 characters")
+    @Column(length = 250, nullable = false)
     private String subject;
 
-    @Size(max = 200, message = "Email body can't exceed 200 characters")
+    @Column(length = 350, nullable = false)
     private String body;
 
     public UUID getId() {
