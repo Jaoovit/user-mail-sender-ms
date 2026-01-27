@@ -3,9 +3,13 @@ package com.oliveira.email.service;
 import com.oliveira.email.dto.UserInfoDTO;
 import com.oliveira.email.model.Email;
 import com.oliveira.email.repository.EmailRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,12 +21,20 @@ public class EmailService {
     @Autowired
     private EmailRepository emailRepository;
 
-    public void sendEmail(UserInfoDTO userInfoDTO) {
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    public void sendEmail(UserInfoDTO userInfoDTO) throws MessagingException {
         Email email = constructEmail(userInfoDTO);
-        System.out.println("Email sent to: " + email.getTo());
-        System.out.println("Email send to" + email.getFrom());
-        System.out.println("Subject: " + email.getSubject());
-        System.out.println("Body: " + email.getBody());
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+        helper.setTo(email.getTo());
+        helper.setFrom(email.getFrom());
+        helper.setText(email.getBody(), true);
+        helper.setSubject(email.getSubject());
+        javaMailSender.send(message);
     }
 
     private Email constructEmail(UserInfoDTO userInfoDTO) {
