@@ -60,7 +60,9 @@ services:
       timeout: 10s
 
   email-service:
-    build: ./email
+    build:
+      context: ./email
+      dockerfile: Dockerfile
     container_name: email-service
     depends_on:
       postgres-email:
@@ -68,7 +70,7 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      DB_EMAIL_URL: ${DB_EMAIL_URL}
+      DB_EMAIL_URL: jdbc:postgresql://postgres-email:5432/${DB_EMAIL_NAME}
       DB_EMAIL_USERNAME: ${DB_EMAIL_USERNAME}
       DB_EMAIL_PASSWORD: ${DB_EMAIL_PASSWORD}
 
@@ -89,7 +91,9 @@ services:
       - app-network
 
   user-service:
-    build: ./user
+    build:
+      context: ./user
+      dockerfile: Dockerfile
     container_name: user-service
     depends_on:
       postgres-user:
@@ -97,7 +101,7 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      DB_USER_URL: ${DB_USER_URL}
+      DB_USER_URL: jdbc:postgresql://postgres-user:5432/${DB_USER_NAME}
       DB_USER_USERNAME: ${DB_USER_USERNAME}
       DB_USER_PASSWORD: ${DB_USER_PASSWORD}
 
@@ -106,6 +110,6 @@ services:
       SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
       SPRING_RABBITMQ_VIRTUAL_HOST: ${SPRING_RABBITMQ_VIRTUAL_HOST}
     ports:
-      - "8082:8082"
+      - "8082:8080"
     networks:
       - app-network
