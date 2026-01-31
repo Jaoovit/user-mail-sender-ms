@@ -1,0 +1,111 @@
+networks:
+  app-network:
+
+volumes:
+  pg_email_data:
+  pg_user_data:
+
+services:
+
+  postgres-email:
+    image: postgres:16
+    container_name: postgres-email
+    environment:
+      POSTGRES_DB: ${DB_EMAIL_NAME}
+      POSTGRES_USER: ${DB_EMAIL_USERNAME}
+      POSTGRES_PASSWORD: ${DB_EMAIL_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_email_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_EMAIL_USERNAME} -d ${DB_EMAIL_NAME}"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+
+  postgres-user:
+    image: postgres:16
+    container_name: postgres-user
+    environment:
+      POSTGRES_DB: ${DB_USER_NAME}
+      POSTGRES_USER: ${DB_USER_USERNAME}
+      POSTGRES_PASSWORD: ${DB_USER_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_user_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER_USERNAME} -d ${DB_USER_NAME}"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      retries: 5
+      timeout: 10s
+
+  email-service:
+    build: ./email
+    container_name: email-service
+    depends_on:
+      postgres-email:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      DB_EMAIL_URL: ${DB_EMAIL_URL}
+      DB_EMAIL_USERNAME: ${DB_EMAIL_USERNAME}
+      DB_EMAIL_PASSWORD: ${DB_EMAIL_PASSWORD}
+
+      SPRING_RABBITMQ_ADDRESSES: ${SPRING_RABBITMQ_ADDRESSES}
+      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+      SPRING_RABBITMQ_VIRTUAL_HOST: ${SPRING_RABBITMQ_VIRTUAL_HOST}
+
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE}
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+
+  user-service:
+    build: ./user
+    container_name: user-service
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      DB_USER_URL: ${DB_USER_URL}
+      DB_USER_USERNAME: ${DB_USER_USERNAME}
+      DB_USER_PASSWORD: ${DB_USER_PASSWORD}
+
+      SPRING_RABBITMQ_ADDRESSES: ${SPRING_RABBITMQ_ADDRESSES}
+      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+      SPRING_RABBITMQ_VIRTUAL_HOST: ${SPRING_RABBITMQ_VIRTUAL_HOST}
+    ports:
+      - "8082:8082"
+    networks:
+      - app-network
