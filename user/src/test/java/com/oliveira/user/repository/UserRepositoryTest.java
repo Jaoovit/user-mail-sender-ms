@@ -32,8 +32,8 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Get User successfully")
     void findUserByUsernameSuccess() {
-        String username = "QAUser";
-        RequestUserDTO requestUserDTO = new RequestUserDTO(username, "QAUser@email.com");
+        String username = "QAUser-1";
+        RequestUserDTO requestUserDTO = new RequestUserDTO(username, "QAUser-1@email.com");
         User user = createUser(requestUserDTO);
         User result = userRepository.findUserByUsername(user.getUsername());
         assertThat(result).isNotNull();
@@ -44,7 +44,7 @@ class UserRepositoryTest {
     void findUserByUsernameFail() {
         String username = "NonExistingUser";
         User result = userRepository.findUserByUsername(username);
-        assertThat(result).isNull();
+            assertThat(result).isNull();
     }
 
     private User createUser(RequestUserDTO data) {
