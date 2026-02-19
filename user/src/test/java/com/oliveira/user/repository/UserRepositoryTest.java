@@ -39,6 +39,14 @@ class UserRepositoryTest {
         assertThat(result).isNotNull();
     }
 
+    @Test
+    @DisplayName("Get User with non existing username")
+    void findUserByUsernameFail() {
+        String username = "NonExistingUser";
+        User result = userRepository.findUserByUsername(username);
+        assertThat(result).isNull();
+    }
+
     private User createUser(RequestUserDTO data) {
         User user = new User();
         user.setUsername(data.username());
